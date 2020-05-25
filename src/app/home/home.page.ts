@@ -1,6 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { FirebaseService } from '../services/firebase.service';
 import { FormGroup, Validators, FormBuilder } from '@angular/forms';
+import { AuthenticationService } from '../services/authentication.service';
+import { NavController } from '@ionic/angular';
 interface NoteData {
   Title: string;
   Content: string;
@@ -10,7 +12,7 @@ interface NoteData {
   templateUrl: 'home.page.html',
   styleUrls: ['home.page.scss'],
 })
-export class HomePage {
+export class HomePage implements OnInit {
 
   noteList =[];
   noteData: NoteData;
@@ -18,13 +20,25 @@ export class HomePage {
   noteContent : string;
   isEdit : boolean = true;
   noteForm : FormGroup;
+  userEmail : string; //authentication
 
-  constructor(private firebaseService : FirebaseService) {
+  constructor(private firebaseService : FirebaseService,private navCtrl : NavController, private authService : AuthenticationService) {
     this.noteData = {} as NoteData;
   }
   ngOnInit(){
+    this.authService.userDetails().subscribe(res => {
+      console.log('res', res);
+      if (res !== null) {
+        this.userEmail = res.email;
+        this.getAllNotes();
+      } else {
+        this.navCtrl.navigateBack('');
+      }
+    }, err => {
+      console.log('err', err);
+    })
     
-    this.getAllNotes();
+   
     
   }
   getAllNotes(){
@@ -76,5 +90,14 @@ export class HomePage {
     this.firebaseService.updateNote(note.id, record);
     note.isEdit = false;
   }
-
+  logout() {
+    this.authService.logoutUser()
+      .then(res => {
+        console.log(res);
+        this.navCtrl.navigateBack('');
+      })
+      .catch(error => {
+        console.log(error);
+      })
+  }
 }
