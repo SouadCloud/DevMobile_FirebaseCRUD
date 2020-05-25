@@ -1,20 +1,88 @@
 <ion-header [translucent]="true">
-  <ion-toolbar>
+  <ion-toolbar color="warning">
     <ion-title>
-      Blank
+      Notes
     </ion-title>
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">Blank</ion-title>
-    </ion-toolbar>
-  </ion-header>
+<ion-content [fullscreen]="true" class="ion-padding">
 
-  <div id="container">
-    <strong>Ready to create an app?</strong>
-    <p>Start with Ionic <a target="_blank" rel="noopener noreferrer" href="https://ionicframework.com/docs/components">UI Components</a></p>
-  </div>
+ <form >
+
+    <ion-item>
+      <ion-label position="floating">Title</ion-label>
+      <ion-input name = "title" [(ngModel)] = "noteTitle"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-label position="floating">Content</ion-label>
+      <ion-input name ="content" [(ngModel)] = "noteContent"></ion-input>
+    </ion-item>
+
+    <ion-item>
+      <ion-button (click)="createNote()">
+        <ion-icon size="small" slot="icon-only" name="add"></ion-icon>
+        &nbsp;Create Note
+      </ion-button>
+    </ion-item>
+
+  </form>
+
+  <ion-card *ngFor="let item of noteList" color="primary">
+    <span *ngIf="!item.isEdit; else elseBlock">
+      <ion-card-header>
+        <ion-card-title>{{item.title}}</ion-card-title>
+        <ion-card-subtitle>{{item.content}}</ion-card-subtitle>
+      </ion-card-header>
+      <ion-card-content>
+
+        <ion-button shape="round" color="secondary" size="small" (click)="editNote(item)">
+          <ion-icon size="small" slot="icon-only" name="create"></ion-icon>
+
+        </ion-button>
+        <ion-button shape="round" color="danger" size="small" (click)="removeNote(item.id)">
+          <ion-icon size="small" slot="icon-only" name="trash"></ion-icon>
+
+        </ion-button>
+      </ion-card-content>
+    </span>
+    <ng-template #elseBlock>
+      <ion-card-header>
+        <ion-card-title>
+          <ion-grid>
+            <ion-row>
+              <ion-col>
+                Edit
+              </ion-col>
+              <ion-col>
+                <ion-button fill="solid" color="medium" size="small" (click)="item.isEdit = false">
+                  Cancel
+                </ion-button>
+              </ion-col>
+              <ion-col>
+                <ion-button fill="solid" color="success" size="small" (click)="updateNote(item)">
+                  Update
+                </ion-button>
+              </ion-col>
+            </ion-row>
+          </ion-grid>
+        </ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <ion-item>
+          <ion-label><strong>Title</strong></ion-label>
+          <ion-input type="text" [(ngModel)]="noteTitle"></ion-input>
+        </ion-item>
+
+        <ion-item>
+          <ion-label><strong>Content</strong></ion-label>
+          <ion-input type="text" [(ngModel)]="noteContent"></ion-input>
+        </ion-item>
+      </ion-card-content>
+    </ng-template>
+
+    
+  </ion-card>
+
 </ion-content>
