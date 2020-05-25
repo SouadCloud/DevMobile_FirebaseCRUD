@@ -82,6 +82,8 @@
       </ion-card-content>
     </ng-template>
 
+<!--load Picture fireStorage module-->
+
     
   </ion-card>
   <ion-grid>
@@ -92,6 +94,17 @@
     </ion-row>
   </ion-grid>
   <ion-button class="submit-btn" (click)="logout()">Log Out</ion-button>
+
+  <div class="box">
+    <div class="preview">
+      <img [src]="url" alt="">
+    </div>
+    <div class="uploadbtn">
+      <label>
+        <input (change)="uploadImage($event)" type="file" class="image-upload" accept="image/*">
+      </label>
+    </div>
+  </div>
   
 
 </ion-content>
